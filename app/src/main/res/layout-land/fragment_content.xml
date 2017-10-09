@@ -6,14 +6,6 @@
     android:id="@+id/flContentFragmentContainer"
     tools:context="unifar.unifar.readlight2.ContentFragment">
 
-    <SeekBar
-        android:id="@+id/seekBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="24dp"
-        />
-
     <ImageView
         android:id="@+id/ivColorPalette"
         android:layout_width="wrap_content"
@@ -21,5 +13,12 @@
         android:layout_gravity="center|end"
         android:contentDescription="@string/colorpalette"
         app:srcCompat="@drawable/ic_color_lens_black_48dp" />
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="24dp" />
 
 </FrameLayout>

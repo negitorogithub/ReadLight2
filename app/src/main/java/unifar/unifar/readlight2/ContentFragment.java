@@ -1,16 +1,29 @@
 package unifar.unifar.readlight2;
 
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.VectorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 
 import yuku.ambilwarna.colorpicker.AmbilWarnaDialogFragment;
 import yuku.ambilwarna.colorpicker.OnAmbilWarnaListener;
+
+import static android.R.attr.cropToPadding;
+import static android.R.attr.fragment;
 
 
 /**
@@ -18,7 +31,8 @@ import yuku.ambilwarna.colorpicker.OnAmbilWarnaListener;
  */
 public class ContentFragment extends Fragment {
 
-    private int currentColor ;
+    private MyViews myViews;
+    private AmbilWarnaDialogFragment ambilWarnaDialogFragment;
 
     public ContentFragment() {
         // Required empty public constructor
@@ -30,33 +44,43 @@ public class ContentFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        int currentColor;
+        View viContent;
+        ViewGroup vgContentFragmentContainer ;
+        ImageView ivColorPalette;
+        Handler handler;
+        SeekBar seekBar;
+        FragmentManager fragmentManeger;
+        viContent = inflater.inflate(R.layout.fragment_content, container, false);
 
-
-        // create OnAmbilWarnaListener instance
-        // new color can be retrieved in onOk() event
-        OnAmbilWarnaListener onAmbilWarnaListener = new OnAmbilWarnaListener() {
-            @Override
-            public void onCancel(AmbilWarnaDialogFragment dialogFragment) {
-            }
-
-            @Override
-            public void onOk(AmbilWarnaDialogFragment dialogFragment, int color) {
-
-                currentColor = color;
-            }
-        };
-
+            handler = new Handler();
+            fragmentManeger = getFragmentManager();
+            vgContentFragmentContainer = viContent.findViewById(R.id.flContentFragmentContainer);
+            ivColorPalette = viContent.findViewById(R.id.ivColorPalette);
+            seekBar = viContent.findViewById(R.id.seekBar);
+        if (savedInstanceState == null) {
+            currentColor = Color.LTGRAY;
+        } else {
+            currentColor = savedInstanceState.getInt("currentColor");
+        }
+        myViews = new MyViews(currentColor, vgContentFragmentContainer, ivColorPalette, handler, fragmentManeger, seekBar, getActivity());
+        myViews.setColorPalette();
+        myViews.setTimeEvent();
         // create new instance of AmbilWarnaDialogFragment and set OnAmbilWarnaListener listener to it
         // show dialog fragment with some tag value
-        AmbilWarnaDialogFragment fragment = AmbilWarnaDialogFragment.newInstance(currentColor);
-        fragment.setOnAmbilWarnaListener(onAmbilWarnaListener);
-        fragment.show(getFragmentManager(),"dolorPickerDiaog");
-        return inflater.inflate(R.layout.fragment_content, container, false);
-
+        return viContent;
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+        outState.putInt("currentColor", myViews.getMcurrentColor());
+    }
+
 
 }
