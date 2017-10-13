@@ -1,11 +1,18 @@
 package unifar.unifar.readlight2;
 
+<<<<<<< HEAD
 
 import android.support.v7.app.AppCompatActivity;
 import android.app.TimePickerDialog;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
+=======
+import android.app.Activity;
+import android.content.Context;
+import android.os.Handler;
+import android.support.v4.app.FragmentManager;
+>>>>>>> master/master
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,18 +22,29 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+<<<<<<< HEAD
 import android.widget.TimePicker;
 
 import java.util.Calendar;
+=======
+>>>>>>> master/master
 
 import yuku.ambilwarna.colorpicker.AmbilWarnaDialogFragment;
 import yuku.ambilwarna.colorpicker.OnAmbilWarnaListener;
 
+<<<<<<< HEAD
 class MyViews {
 
 
     private final FragmentManager mfragmentManeger;
     private final AppCompatActivity mcontext;
+=======
+public class MyViews {
+
+
+    private final FragmentManager mfragmentManeger;
+    private final Activity mcontext;
+>>>>>>> master/master
     private final Animation mseekBarAnimation;
     private final TranslateAnimation mivColorPaletteAnimation;
     private int mcurrentColor;
@@ -35,14 +53,22 @@ class MyViews {
     private SeekBar mseekBar;
     private Handler mhandler;
     private Runnable mrunnable;
+<<<<<<< HEAD
     private ImageView mivSettingButton;
     private Animation mivSettingButtonAnimation;
+=======
+
+>>>>>>> master/master
 
     public FragmentManager getMfragmentManeger() {
         return mfragmentManeger;
     }
 
+<<<<<<< HEAD
     MyViews(int currentColor, ViewGroup vgContentFragmentContainer, ImageView ivColorPalette, Handler handler, FragmentManager fragmentManager, SeekBar seekBar, AppCompatActivity context, ImageView ivSettingButton) {
+=======
+    MyViews(int currentColor, ViewGroup vgContentFragmentContainer, ImageView ivColorPalette, Handler handler, FragmentManager fragmentManager, SeekBar seekBar, Activity context) {
+>>>>>>> master/master
         this.mcurrentColor = currentColor;
         this.mvgContentFragmentContainer = vgContentFragmentContainer;
         this.mvgContentFragmentContainer.setBackgroundColor(this.mcurrentColor);
@@ -51,7 +77,10 @@ class MyViews {
         this.mfragmentManeger = fragmentManager;
         this.mseekBar = seekBar;
         this.mcontext = context;
+<<<<<<< HEAD
         this.mivSettingButton = ivSettingButton;
+=======
+>>>>>>> master/master
         this.mseekBar.setMax(1000);
         this.mseekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -72,6 +101,7 @@ class MyViews {
             }
         });
         //this.mseekBarAnimation = AnimationUtils.loadAnimation(mcontext,R.anim.myanim);
+<<<<<<< HEAD
         this.mivSettingButtonAnimation = new TranslateAnimation(
                 Animation.ABSOLUTE,0,
                 Animation.RELATIVE_TO_PARENT,-0.2f,
@@ -98,6 +128,8 @@ class MyViews {
         });
 
 
+=======
+>>>>>>> master/master
         this.mivColorPaletteAnimation = new TranslateAnimation(
                 Animation.ABSOLUTE,0,
                 Animation.RELATIVE_TO_PARENT,0.2f,
@@ -152,7 +184,10 @@ class MyViews {
             public void run() {
                 mseekBar.startAnimation(mseekBarAnimation);
                 mivColorPalette.startAnimation(mivColorPaletteAnimation);
+<<<<<<< HEAD
                 mivSettingButton.startAnimation(mivSettingButtonAnimation);
+=======
+>>>>>>> master/master
             }
         };
 
@@ -161,10 +196,15 @@ class MyViews {
             public void onClick(View view) {
                 mivColorPalette.setVisibility(View.VISIBLE);
                 mseekBar.setVisibility(View.VISIBLE);
+<<<<<<< HEAD
                 mivSettingButton.setVisibility(View.VISIBLE);
                 mivColorPaletteAnimation.cancel();
                 mseekBarAnimation.cancel();
                 mivSettingButtonAnimation.cancel();
+=======
+                mivColorPaletteAnimation.cancel();
+                mseekBarAnimation.cancel();
+>>>>>>> master/master
                 setTimeEvent();
             }
         });
@@ -201,6 +241,7 @@ class MyViews {
     public void setMhandler(Handler mhandler) {
         this.mhandler = mhandler;
     }
+<<<<<<< HEAD
     void applyAll(){
         setColorPalette();
         setTimeEvent();
@@ -208,6 +249,9 @@ class MyViews {
     }
 
     private void setColorPalette(){
+=======
+    void setColorPalette(){
+>>>>>>> master/master
         mivColorPalette.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
 
@@ -232,11 +276,16 @@ class MyViews {
         });
 
     }
+<<<<<<< HEAD
     private void setTimeEvent(){
+=======
+    void setTimeEvent(){
+>>>>>>> master/master
         mhandler.removeCallbacks(mrunnable);
         mhandler.postDelayed(mrunnable, 10000);
     }
 
+<<<<<<< HEAD
     private void setOnSettingButtonListener(){
         this.mivSettingButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -263,3 +312,8 @@ class MyViews {
             });
     }
 }
+=======
+
+
+}
+>>>>>>> master/master

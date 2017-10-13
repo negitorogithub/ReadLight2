@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 
 import yuku.ambilwarna.colorpicker.AmbilWarnaDialogFragment;
+import yuku.ambilwarna.colorpicker.OnAmbilWarnaListener;
 
 
 /**
@@ -22,10 +23,8 @@ import yuku.ambilwarna.colorpicker.AmbilWarnaDialogFragment;
  */
 public class ContentFragment extends Fragment implements TimePickerListener{
 
-    private MyViews myViews;
-    private AmbilWarnaDialogFragment ambilWarnaDialogFragment;
-    private ViewGroup mcontainer;
-    private TimePickerListener msettingButtonListener;
+    private int currentColor ;
+
     public ContentFragment() {
         // Required empty public constructor
     }
