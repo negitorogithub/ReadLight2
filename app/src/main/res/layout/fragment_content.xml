@@ -2,6 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/flContentFragmentContainer"
     tools:context="unifar.unifar.readlight2.ContentFragment">
 
     <SeekBar
@@ -19,5 +21,11 @@
         android:layout_gravity="center|end"
         android:contentDescription="@string/colorpalette"
         app:srcCompat="@drawable/ic_color_lens_black_48dp" />
-
+    <ImageView
+        android:id="@+id/ivSettingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|start"
+        android:contentDescription="@string/settings"
+        app:srcCompat="@drawable/ic_settings_black_48dp" />
 </FrameLayout>
