@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.app.TimePickerDialog;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,14 +34,14 @@ class MyViews {
     private SeekBar mseekBar;
     private Handler mhandler;
     private Runnable mrunnable;
-    private ImageView mivSettingButton;
-    private Animation mivSettingButtonAnimation;
+    private ImageView mivAddAlarmButton;
+    private Animation mivAddAlarmButtonAnimation;
 
     public FragmentManager getMfragmentManeger() {
         return mfragmentManeger;
     }
 
-    MyViews(int currentColor, ViewGroup vgContentFragmentContainer, ImageView ivColorPalette, Handler handler, FragmentManager fragmentManager, SeekBar seekBar, AppCompatActivity context, ImageView ivSettingButton) {
+    MyViews(int currentColor, ViewGroup vgContentFragmentContainer, ImageView ivColorPalette, Handler handler, FragmentManager fragmentManager, SeekBar seekBar, AppCompatActivity context, ImageView ivAddAlarmButton) {
         this.mcurrentColor = currentColor;
         this.mvgContentFragmentContainer = vgContentFragmentContainer;
         this.mvgContentFragmentContainer.setBackgroundColor(this.mcurrentColor);
@@ -51,7 +50,7 @@ class MyViews {
         this.mfragmentManeger = fragmentManager;
         this.mseekBar = seekBar;
         this.mcontext = context;
-        this.mivSettingButton = ivSettingButton;
+        this.mivAddAlarmButton = ivAddAlarmButton;
         this.mseekBar.setMax(1000);
         this.mseekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -72,15 +71,15 @@ class MyViews {
             }
         });
         //this.mseekBarAnimation = AnimationUtils.loadAnimation(mcontext,R.anim.myanim);
-        this.mivSettingButtonAnimation = new TranslateAnimation(
+        this.mivAddAlarmButtonAnimation = new TranslateAnimation(
                 Animation.ABSOLUTE,0,
                 Animation.RELATIVE_TO_PARENT,-0.2f,
                 Animation.ABSOLUTE,0,
                 Animation.ABSOLUTE,0);
-        this.mivSettingButtonAnimation.setDuration(2000);
-        this.mivSettingButtonAnimation.setFillAfter(false);
-        this.mivSettingButtonAnimation.setInterpolator(new DecelerateInterpolator());
-        this.mivSettingButtonAnimation.setAnimationListener(new Animation.AnimationListener() {
+        this.mivAddAlarmButtonAnimation.setDuration(2000);
+        this.mivAddAlarmButtonAnimation.setFillAfter(false);
+        this.mivAddAlarmButtonAnimation.setInterpolator(new DecelerateInterpolator());
+        this.mivAddAlarmButtonAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
 
@@ -88,7 +87,7 @@ class MyViews {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                mivSettingButton.setVisibility(View.INVISIBLE);
+                mivAddAlarmButton.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -152,7 +151,7 @@ class MyViews {
             public void run() {
                 mseekBar.startAnimation(mseekBarAnimation);
                 mivColorPalette.startAnimation(mivColorPaletteAnimation);
-                mivSettingButton.startAnimation(mivSettingButtonAnimation);
+                mivAddAlarmButton.startAnimation(mivAddAlarmButtonAnimation);
             }
         };
 
@@ -161,10 +160,10 @@ class MyViews {
             public void onClick(View view) {
                 mivColorPalette.setVisibility(View.VISIBLE);
                 mseekBar.setVisibility(View.VISIBLE);
-                mivSettingButton.setVisibility(View.VISIBLE);
+                mivAddAlarmButton.setVisibility(View.VISIBLE);
                 mivColorPaletteAnimation.cancel();
                 mseekBarAnimation.cancel();
-                mivSettingButtonAnimation.cancel();
+                mivAddAlarmButtonAnimation.cancel();
                 setTimeEvent();
             }
         });
@@ -238,7 +237,7 @@ class MyViews {
     }
 
     private void setOnSettingButtonListener(){
-        this.mivSettingButton.setOnClickListener(new View.OnClickListener() {
+        this.mivAddAlarmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mcontext.getSupportFragmentManager().findFragmentByTag("contentFragment") instanceof TimePickerListener) {

@@ -22,10 +22,10 @@
         android:contentDescription="@string/colorpalette"
         app:srcCompat="@drawable/ic_color_lens_black_48dp" />
     <ImageView
-        android:id="@+id/ivSettingButton"
+        android:id="@+id/ivAddAlarmButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center|start"
         android:contentDescription="@string/settings"
-        app:srcCompat="@drawable/ic_settings_black_48dp" />
+        app:srcCompat="@drawable/ic_add_alarm_black_48dp" />
 </FrameLayout>

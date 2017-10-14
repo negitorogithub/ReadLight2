@@ -1,11 +1,11 @@
 package unifar.unifar.readlight2;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.ContactsContract;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import yuku.ambilwarna.colorpicker.AmbilWarnaDialogFragment;
 
@@ -53,10 +52,19 @@ public class ContentFragment extends Fragment implements TimePickerListener{
     @Override
     public void onAttach(Context context){
         super.onAttach(context);
+        setupOnAtacch(context);
+    }
+    @Override
+    public void onAttach(Activity activity){
+        super.onAttach(activity);
+        setupOnAtacch(activity);
+    }
+    private void setupOnAtacch(Context context){
         mappCompatActivity = (AppCompatActivity) context;
         if (context instanceof TimePickerListener){
             this.msettingButtonListener = (TimePickerListener)context;
         }
+
     }
     @Override public void onDetach(){
         super.onDetach();
@@ -74,7 +82,7 @@ public class ContentFragment extends Fragment implements TimePickerListener{
         View viContent;
         ViewGroup vgContentFragmentContainer ;
         ImageView ivColorPalette;
-        ImageView ivSettingButton;
+        ImageView ivAddAlarmButton;
         Handler handler;
         SeekBar seekBar;
         final FragmentManager fragmentManeger;
@@ -84,13 +92,13 @@ public class ContentFragment extends Fragment implements TimePickerListener{
         vgContentFragmentContainer = viContent.findViewById(R.id.flContentFragmentContainer);
         ivColorPalette = viContent.findViewById(R.id.ivColorPalette);
         seekBar = viContent.findViewById(R.id.seekBar);
-        ivSettingButton = viContent.findViewById(R.id.ivSettingButton);
+        ivAddAlarmButton = viContent.findViewById(R.id.ivAddAlarmButton);
         if (savedInstanceState == null) {
             currentColor = Color.LTGRAY;
         } else {
             currentColor = savedInstanceState.getInt("currentColor");
         }
-        myViews = new MyViews(currentColor, vgContentFragmentContainer, ivColorPalette, handler, fragmentManeger, seekBar,(AppCompatActivity) getActivity(), ivSettingButton);
+        myViews = new MyViews(currentColor, vgContentFragmentContainer, ivColorPalette, handler, fragmentManeger, seekBar,(AppCompatActivity) getActivity(), ivAddAlarmButton);
         myViews.applyAll();
 
         // create new instance of AmbilWarnaDialogFragment and set OnAmbilWarnaListener listener to it
@@ -139,7 +147,14 @@ public class ContentFragment extends Fragment implements TimePickerListener{
             }
         },timeToDelay
         );
-        Snackbar.make(this.mcontainer,getString(R.string.setTimeMessage,String.valueOf(hour),String.valueOf(minute)),Snackbar.LENGTH_INDEFINITE);
+        final Snackbar snackbar = Snackbar.make(this.mcontainer,getString(R.string.setTimeMessage,String.valueOf(hour),String.valueOf(minute)),Snackbar.LENGTH_INDEFINITE);
+                 snackbar.setAction("OK", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        snackbar.dismiss();
+                    }
+                })
+                .show();
 
         Log.d("rl2",String.valueOf(timeToDelay));
     }
