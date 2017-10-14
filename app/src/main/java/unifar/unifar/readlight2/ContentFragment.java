@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -138,6 +139,8 @@ public class ContentFragment extends Fragment implements TimePickerListener{
             }
         },timeToDelay
         );
+        Snackbar.make(this.mcontainer,getString(R.string.setTimeMessage,String.valueOf(hour),String.valueOf(minute)),Snackbar.LENGTH_INDEFINITE);
+
         Log.d("rl2",String.valueOf(timeToDelay));
     }
 }
