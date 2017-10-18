@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.app.TimePickerDialog;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,10 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TimePicker;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 
 import java.util.Calendar;
 
@@ -27,7 +32,8 @@ class MyViews {
     private final FragmentManager mfragmentManeger;
     private final AppCompatActivity mcontext;
     private final Animation mseekBarAnimation;
-    private final TranslateAnimation mivColorPaletteAnimation;
+    private final Animation mivColorPaletteAnimation;
+    //private final Animation madViewAnimation;
     private int mcurrentColor;
     private ViewGroup mvgContentFragmentContainer;
     private ImageView mivColorPalette;
@@ -36,7 +42,7 @@ class MyViews {
     private Runnable mrunnable;
     private ImageView mivAddAlarmButton;
     private Animation mivAddAlarmButtonAnimation;
-
+    private AdView madView;
     public FragmentManager getMfragmentManeger() {
         return mfragmentManeger;
     }
@@ -50,6 +56,9 @@ class MyViews {
         this.mfragmentManeger = fragmentManager;
         this.mseekBar = seekBar;
         this.mcontext = context;
+        this.madView = this.mvgContentFragmentContainer.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("71FDD2458B24F37418B39566411942D2").build();
+        this.madView.loadAd(adRequest);
         this.mivAddAlarmButton = ivAddAlarmButton;
         this.mseekBar.setMax(1000);
         this.mseekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -95,8 +104,32 @@ class MyViews {
 
             }
         });
+/*
+        this.madViewAnimation = new TranslateAnimation(
+                Animation.ABSOLUTE,0,
+                Animation.ABSOLUTE,0,
+                Animation.ABSOLUTE,0,
+                Animation.ABSOLUTE,0.2f);
+        this.madViewAnimation.setDuration(2000);
+        this.madViewAnimation.setFillAfter(false);
+        this.madViewAnimation.setInterpolator(new DecelerateInterpolator());
+        this.madViewAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
 
+            }
 
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                madView.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+*/
         this.mivColorPaletteAnimation = new TranslateAnimation(
                 Animation.ABSOLUTE,0,
                 Animation.RELATIVE_TO_PARENT,0.2f,
@@ -152,6 +185,7 @@ class MyViews {
                 mseekBar.startAnimation(mseekBarAnimation);
                 mivColorPalette.startAnimation(mivColorPaletteAnimation);
                 mivAddAlarmButton.startAnimation(mivAddAlarmButtonAnimation);
+                madView.setVisibility(View.INVISIBLE);
             }
         };
 
@@ -161,9 +195,11 @@ class MyViews {
                 mivColorPalette.setVisibility(View.VISIBLE);
                 mseekBar.setVisibility(View.VISIBLE);
                 mivAddAlarmButton.setVisibility(View.VISIBLE);
+                madView.setVisibility(View.VISIBLE);
                 mivColorPaletteAnimation.cancel();
                 mseekBarAnimation.cancel();
                 mivAddAlarmButtonAnimation.cancel();
+                //madViewAnimation.cancel();
                 setTimeEvent();
             }
         });
@@ -218,6 +254,14 @@ class MyViews {
                     public void onOk(AmbilWarnaDialogFragment dialogFragment, int color) {
                         mcurrentColor = color;
                         mvgContentFragmentContainer.setBackgroundColor(mcurrentColor);
+                        MyApplication.adCount++;
+                        if (MainActivity.InterstitialAd.isLoaded()) {
+
+                            if (MyApplication.adCount % 4 ==2) {
+                                MainActivity.InterstitialAd.show();
+                            }
+
+                        }
                     }
                 };
 

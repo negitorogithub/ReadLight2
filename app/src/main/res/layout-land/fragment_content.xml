@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="24dp" />
+        android:layout_marginBottom="74dp" />
     <ImageView
         android:id="@+id/ivAddAlarmButton"
         android:layout_width="wrap_content"
@@ -27,4 +27,11 @@
         android:layout_gravity="center|start"
         android:contentDescription="@string/settings"
         app:srcCompat="@drawable/ic_settings_black_48dp" />
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:adSize="BANNER"
+        android:layout_gravity="bottom|center"
+        app:adUnitId="ca-app-pub-6418178360564076/8463869769" />
 </FrameLayout>
