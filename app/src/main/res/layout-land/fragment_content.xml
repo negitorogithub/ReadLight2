@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center|start"
         android:contentDescription="@string/settings"
-        app:srcCompat="@drawable/ic_settings_black_48dp" />
+        app:srcCompat="@drawable/ic_add_alarm_black_48dp" />
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"
         android:layout_width="wrap_content"

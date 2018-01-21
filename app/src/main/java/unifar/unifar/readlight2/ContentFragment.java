@@ -3,6 +3,7 @@ package unifar.unifar.readlight2;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,7 +20,10 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 
 import java.util.Calendar;
+import java.util.Locale;
 
+import hotchemi.android.rate.AppRate;
+import hotchemi.android.rate.OnClickButtonListener;
 import yuku.ambilwarna.colorpicker.AmbilWarnaDialogFragment;
 
 
@@ -28,11 +32,14 @@ import yuku.ambilwarna.colorpicker.AmbilWarnaDialogFragment;
  */
 public class ContentFragment extends Fragment implements TimePickerListener{
 
+    public static final String BACK_COLOR = "BackColor";
     private MyViews myViews;
     private AmbilWarnaDialogFragment ambilWarnaDialogFragment;
     private ViewGroup mcontainer;
     private TimePickerListener msettingButtonListener;
     private AppCompatActivity mappCompatActivity;
+    private SharedPreferences sharedPreferences;
+
     public ContentFragment() {
         // Required empty public constructor
     }
@@ -45,9 +52,9 @@ public class ContentFragment extends Fragment implements TimePickerListener{
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+
     }
     @Override
     public void onAttach(Context context){
@@ -69,6 +76,14 @@ public class ContentFragment extends Fragment implements TimePickerListener{
     @Override public void onDetach(){
         super.onDetach();
         this.msettingButtonListener = null;
+
+    }
+
+    @Override public void onPause(){
+        super.onPause();
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(BACK_COLOR, myViews.getMcurrentColor());
+        editor.apply();
     }
 
     @Override
@@ -93,8 +108,11 @@ public class ContentFragment extends Fragment implements TimePickerListener{
         ivColorPalette = viContent.findViewById(R.id.ivColorPalette);
         seekBar = viContent.findViewById(R.id.seekBar);
         ivAddAlarmButton = viContent.findViewById(R.id.ivAddAlarmButton);
+
+        sharedPreferences = getActivity().getSharedPreferences("Settings", Context.MODE_PRIVATE);
+
         if (savedInstanceState == null) {
-            currentColor = Color.LTGRAY;
+            currentColor =sharedPreferences.getInt(BACK_COLOR, Color.LTGRAY);
         } else {
             currentColor = savedInstanceState.getInt("currentColor");
         }
@@ -147,7 +165,16 @@ public class ContentFragment extends Fragment implements TimePickerListener{
             }
         },timeToDelay
         );
-        final Snackbar snackbar = Snackbar.make(this.mcontainer,getString(R.string.setTimeMessage,String.valueOf(hour),String.valueOf(minute)),Snackbar.LENGTH_INDEFINITE);
+
+
+        final Snackbar snackbar;
+        String sHour = String.valueOf(hour);
+        String sMinute = String.valueOf(minute);
+        if (minute<10){
+            sMinute = "0"+sMinute;
+        }
+        snackbar = Snackbar.make(this.mcontainer,getString(R.string.setTimeMessage, sHour, sMinute),Snackbar.LENGTH_INDEFINITE);
+
                  snackbar.setAction("OK", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
