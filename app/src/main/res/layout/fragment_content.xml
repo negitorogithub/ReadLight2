@@ -32,10 +32,18 @@
         ads:adUnitId="ca-app-pub-6418178360564076/8463869769" />
 
     <ImageView
-        android:id="@+id/ivColorPalette"
+    android:id="@+id/ivColorPalette"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center|end"
+    android:contentDescription="@string/colorpalette"
+    app:srcCompat="@drawable/ic_color_lens_black_48dp" />
+
+    <ImageView
+        android:id="@+id/ivSettings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center|end"
-        android:contentDescription="@string/colorpalette"
-        app:srcCompat="@drawable/ic_color_lens_black_48dp" />
+        android:layout_gravity="center|end|top"
+        android:contentDescription="@string/settings"
+        app:srcCompat="@drawable/ic_settings_black_48dp" />
 </FrameLayout>

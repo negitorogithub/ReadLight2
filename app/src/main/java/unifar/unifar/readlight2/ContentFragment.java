@@ -98,16 +98,18 @@ public class ContentFragment extends Fragment implements TimePickerListener{
         ViewGroup vgContentFragmentContainer ;
         ImageView ivColorPalette;
         ImageView ivAddAlarmButton;
+        ImageView ivSettingsView;
         Handler handler;
         SeekBar seekBar;
         final FragmentManager fragmentManeger;
         viContent = inflater.inflate(R.layout.fragment_content, container, false);
         handler = new Handler();
-        fragmentManeger = getChildFragmentManager();
+        fragmentManeger = getFragmentManager();
         vgContentFragmentContainer = viContent.findViewById(R.id.flContentFragmentContainer);
         ivColorPalette = viContent.findViewById(R.id.ivColorPalette);
         seekBar = viContent.findViewById(R.id.seekBar);
         ivAddAlarmButton = viContent.findViewById(R.id.ivAddAlarmButton);
+        ivSettingsView = viContent.findViewById(R.id.ivSettings);
 
         sharedPreferences = getActivity().getSharedPreferences("Settings", Context.MODE_PRIVATE);
 
@@ -116,7 +118,7 @@ public class ContentFragment extends Fragment implements TimePickerListener{
         } else {
             currentColor = savedInstanceState.getInt("currentColor");
         }
-        myViews = new MyViews(currentColor, vgContentFragmentContainer, ivColorPalette, handler, fragmentManeger, seekBar,(AppCompatActivity) getActivity(), ivAddAlarmButton);
+        myViews = new MyViews(currentColor, vgContentFragmentContainer, ivColorPalette, handler, fragmentManeger, seekBar,(AppCompatActivity) getActivity(), ivAddAlarmButton, ivSettingsView);
         myViews.applyAll();
 
         // create new instance of AmbilWarnaDialogFragment and set OnAmbilWarnaListener listener to it

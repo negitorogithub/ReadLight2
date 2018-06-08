@@ -4,4 +4,11 @@
     <string name="colorpalette">colorPalette</string>
     <string name="settings">settings</string>
     <string name="setTimeMessage">This app will finish at %1$s:%2$s</string>
+    <string name="using_libraries">using Libraries</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="back">back</string>
+    <string name="change_personalize_setting_for_europe_users">Change Personalize Setting</string>
+    <string name="licences_information">Licences information</string>
+    <string name="custom_license_title">Licenses information</string>
+
 </resources>

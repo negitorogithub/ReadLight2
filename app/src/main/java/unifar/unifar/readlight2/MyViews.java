@@ -1,6 +1,7 @@
 package unifar.unifar.readlight2;
 
 
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.app.TimePickerDialog;
 import android.os.Handler;
@@ -17,11 +18,13 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TimePicker;
 
+import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 
 import java.util.Calendar;
+import java.util.Set;
 
 import yuku.ambilwarna.colorpicker.AmbilWarnaDialogFragment;
 import yuku.ambilwarna.colorpicker.OnAmbilWarnaListener;
@@ -31,23 +34,26 @@ class MyViews {
 
     private final FragmentManager mfragmentManeger;
     private final AppCompatActivity mcontext;
+    private SeekBar mseekBar;
     private final Animation mseekBarAnimation;
+    private ImageView mivColorPalette;
     private final Animation mivColorPaletteAnimation;
+    private ImageView mivAddAlarmButton;
+    private final Animation mivAddAlarmButtonAnimation;
+    private ImageView mivSettingsView;
+    private final Animation mivSettingsAnimation;
     //private final Animation madViewAnimation;
     private int mcurrentColor;
     private ViewGroup mvgContentFragmentContainer;
-    private ImageView mivColorPalette;
-    private SeekBar mseekBar;
     private Handler mhandler;
     private Runnable mrunnable;
-    private ImageView mivAddAlarmButton;
-    private Animation mivAddAlarmButtonAnimation;
+
     private AdView madView;
     public FragmentManager getMfragmentManeger() {
         return mfragmentManeger;
     }
 
-    MyViews(int currentColor, ViewGroup vgContentFragmentContainer, ImageView ivColorPalette, Handler handler, FragmentManager fragmentManager, SeekBar seekBar, AppCompatActivity context, ImageView ivAddAlarmButton) {
+    MyViews(int currentColor, ViewGroup vgContentFragmentContainer, ImageView ivColorPalette, Handler handler, FragmentManager fragmentManager, SeekBar seekBar, AppCompatActivity context, ImageView ivAddAlarmButton, ImageView ivSettingsView) {
         this.mcurrentColor = currentColor;
         this.mvgContentFragmentContainer = vgContentFragmentContainer;
         this.mvgContentFragmentContainer.setBackgroundColor(this.mcurrentColor);
@@ -57,8 +63,21 @@ class MyViews {
         this.mseekBar = seekBar;
         this.mcontext = context;
         this.madView = this.mvgContentFragmentContainer.findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice("71FDD2458B24F37418B39566411942D2").build();
-        this.madView.loadAd(adRequest);
+        this.mivSettingsView = ivSettingsView;
+
+        Bundle extras = new Bundle();
+        extras.putString("npa", "1");
+        PersonalizedAdManager adManager = new PersonalizedAdManager(context.getApplicationContext());
+        if (adManager.getIsPersonalized()){
+            this.madView.loadAd(new AdRequest.Builder().addTestDevice("71FDD2458B24F37418B39566411942D2").build());
+        }else {
+            this.madView.loadAd(new AdRequest
+                    .Builder()
+                    .addNetworkExtrasBundle(AdMobAdapter.class, extras)
+                    .addTestDevice("71FDD2458B24F37418B39566411942D2")
+                    .build());
+        }
+
         this.mivAddAlarmButton = ivAddAlarmButton;
         this.mseekBar.setMax(1000);
         this.mseekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -155,6 +174,31 @@ class MyViews {
             }
         });
 
+        this.mivSettingsAnimation = new TranslateAnimation(
+                Animation.ABSOLUTE,0,
+                Animation.RELATIVE_TO_PARENT,0.2f,
+                Animation.ABSOLUTE,0,
+                Animation.ABSOLUTE,0);
+        this.mivSettingsAnimation.setDuration(2000);
+        this.mivSettingsAnimation.setFillAfter(false);
+        this.mivSettingsAnimation.setInterpolator(new DecelerateInterpolator());
+        mivSettingsAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mivSettingsView.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
         this.mseekBarAnimation = new TranslateAnimation(
         Animation.ABSOLUTE,0,
         Animation.ABSOLUTE,0,
@@ -185,6 +229,7 @@ class MyViews {
                 mseekBar.startAnimation(mseekBarAnimation);
                 mivColorPalette.startAnimation(mivColorPaletteAnimation);
                 mivAddAlarmButton.startAnimation(mivAddAlarmButtonAnimation);
+                mivSettingsView.startAnimation(mivSettingsAnimation);
                 madView.setVisibility(View.INVISIBLE);
             }
         };
@@ -196,9 +241,11 @@ class MyViews {
                 mseekBar.setVisibility(View.VISIBLE);
                 mivAddAlarmButton.setVisibility(View.VISIBLE);
                 madView.setVisibility(View.VISIBLE);
+                mivSettingsView.setVisibility(View.VISIBLE);
                 mivColorPaletteAnimation.cancel();
                 mseekBarAnimation.cancel();
                 mivAddAlarmButtonAnimation.cancel();
+                mivSettingsAnimation.cancel();
                 //madViewAnimation.cancel();
                 setTimeEvent();
             }
@@ -239,6 +286,7 @@ class MyViews {
     void applyAll(){
         setColorPalette();
         setTimeEvent();
+        setOnAlarmButtonListener();
         setOnSettingButtonListener();
     }
 
@@ -280,7 +328,7 @@ class MyViews {
         mhandler.postDelayed(mrunnable, 10000);
     }
 
-    private void setOnSettingButtonListener(){
+    private void setOnAlarmButtonListener(){
         this.mivAddAlarmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -304,5 +352,14 @@ class MyViews {
             }
 
             });
+    }
+    
+    private void  setOnSettingButtonListener(){
+        this.mivSettingsView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mfragmentManeger.beginTransaction().replace(R.id.rlMainActivityContainer, SettingFragment.newInstance()).commit();
+            }
+        });
     }
 }
