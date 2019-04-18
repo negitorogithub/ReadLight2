@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">読書灯</string>
+
+    <string name="colorpalette">色設定</string>
+    <string name="settings">アラームをセットする</string>
+    <string name="setTimeMessage">%1$s時%2$s分にこのアプリを終了します</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="using_libraries">using Libraries</string>
+    <string name="back">back</string>
+    <string name="change_personalize_setting_for_europe_users">パーソナライズ設定変更</string>
+    <string name="licences_information">ライセンス情報</string>
+    <string name="custom_license_title">ライセンス情報</string>
+    <string name="donate390" >広告を消す(390円)</string>
+    <string name="donate1000">サポーターになる+広告を消す(1000円)</string>
+    <string name="donate1000dummy" >サポーターになる(1000円)</string>
+    <string name="donate3000" >ゴールドサポーターになる(3000円)</string>
+    <string name="textviewsupporterexplanation">サポーターになると、下のサポーター一覧に名前が載ります</string>
+</resources>

@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "260000127954",
+    "firebase_url": "https://aaaa-f2368.firebaseio.com",
+    "project_id": "aaaa-f2368",
+    "storage_bucket": "aaaa-f2368.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:260000127954:android:afbb46b1bc53b2db",
+        "android_client_info": {
+          "package_name": "unifar.unifar.readlight2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "260000127954-j05ghsa1pk2lo9pao0gduhdr5q58gin5.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "260000127954-j05ghsa1pk2lo9pao0gduhdr5q58gin5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWCPXFqTPgxkNlUdX1qxzaevL3os_r_bk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

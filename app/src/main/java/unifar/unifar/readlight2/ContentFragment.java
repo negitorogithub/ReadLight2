@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,10 +21,7 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 
 import java.util.Calendar;
-import java.util.Locale;
 
-import hotchemi.android.rate.AppRate;
-import hotchemi.android.rate.OnClickButtonListener;
 import yuku.ambilwarna.colorpicker.AmbilWarnaDialogFragment;
 
 
@@ -87,7 +85,7 @@ public class ContentFragment extends Fragment implements TimePickerListener{
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -127,7 +125,7 @@ public class ContentFragment extends Fragment implements TimePickerListener{
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState){
+    public void onSaveInstanceState(@NonNull Bundle outState){
         super.onSaveInstanceState(outState);
         outState.putInt("currentColor", myViews.getMcurrentColor());
     }
@@ -140,25 +138,23 @@ public class ContentFragment extends Fragment implements TimePickerListener{
         int hourDelta =0;
         if (calendar.get(Calendar.HOUR_OF_DAY)<hour) {
             hourDelta= hour-calendar.get(Calendar.HOUR_OF_DAY);
-        } else if (calendar.get(Calendar.HOUR_OF_DAY)==hour){
-            hourDelta =0;
-        } else if (calendar.get(Calendar.HOUR_OF_DAY)>hour){
-            hourDelta= hour+24-calendar.get(Calendar.HOUR_OF_DAY);
+        } else if (calendar.get(Calendar.HOUR_OF_DAY) != hour) {
+            if (calendar.get(Calendar.HOUR_OF_DAY)>hour){
+                hourDelta= hour+24-calendar.get(Calendar.HOUR_OF_DAY);
+            }
         }
         int minuteDelta = 0;
         if (calendar.get(Calendar.MINUTE)<minute) {
             minuteDelta= minute-calendar.get(Calendar.MINUTE);
-        } else if (calendar.get(Calendar.MINUTE)==minute){
-            minuteDelta =0;
-        } else if (calendar.get(Calendar.MINUTE)>minute){
-            minuteDelta= minute+60-calendar.get(Calendar.MINUTE);
+        } else if (calendar.get(Calendar.MINUTE) != minute) {
+            if (calendar.get(Calendar.MINUTE)>minute){
+                minuteDelta= minute+60-calendar.get(Calendar.MINUTE);
+            }
         }
         calendar.add(Calendar.HOUR_OF_DAY, hourDelta);
         calendar.add(Calendar.MINUTE, minuteDelta);
         long timeNow = System.currentTimeMillis();
         long timeToDelay = Math.abs(calendar.getTimeInMillis() - timeNow);
-
-
 
         new Handler().postDelayed( new Runnable() {
             @Override
@@ -167,7 +163,6 @@ public class ContentFragment extends Fragment implements TimePickerListener{
             }
         },timeToDelay
         );
-
 
         final Snackbar snackbar;
         String sHour = String.valueOf(hour);

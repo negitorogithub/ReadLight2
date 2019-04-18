@@ -8,6 +8,39 @@
     tools:context=".SettingFragment">
 
 
+    <Button
+        android:id="@+id/donateButton1000"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/donate1000"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/donateButton390" />
+
+    <Button
+        android:id="@+id/donateButton3000"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/donate3000"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/donateButton1000dummy" />
+
+    <Button
+        android:id="@+id/donateButton1000dummy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/donate1000dummy"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/donateButton1000" />
+
     <ImageView
         android:id="@+id/ivBack"
         android:layout_width="wrap_content"
@@ -41,6 +74,29 @@
         android:text="@string/licences_information"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/changePersonalizedSetting" />
+
+    <Button
+        android:id="@+id/donateButton390"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/donate390"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/licenseButton" />
+
+    <TextView
+        android:id="@+id/textViewSupporterExplanation"
+        android:layout_width="411dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/textviewsupporterexplanation"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/donateButton3000" />
 
 
 </android.support.constraint.ConstraintLayout>
