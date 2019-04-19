@@ -3,6 +3,7 @@
     package="unifar.unifar.readlight2">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.android.vending.BILLING" />
     <application
         android:allowBackup="true"
         android:icon="@drawable/icon3"
@@ -27,6 +28,7 @@
                android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
                android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
                />
+
     </application>
 
 </manifest>
