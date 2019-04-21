@@ -16,8 +16,15 @@ import java.net.MalformedURLException
 import java.net.URL
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import android.content.Intent
-
-
+import com.android.billingclient.api.BillingClient
+import com.android.vending.billing.IInAppBillingService
+import android.os.IBinder
+import android.content.ComponentName
+import android.content.ServiceConnection
+import android.os.Handler
+import android.util.Log
+import com.android.billingclient.api.BillingClientStateListener
+import com.android.billingclient.api.SkuDetailsParams
 
 
 /**
@@ -31,6 +38,7 @@ import android.content.Intent
  */
 class SettingFragment : Fragment() {
 
+    private val mIsServiceConnected: Boolean = false
     private var consentInformation: ConsentInformation? = null
     private var consentForm :ConsentForm? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,20 +48,60 @@ class SettingFragment : Fragment() {
 
     }
 
+    private lateinit var billingClient: BillingClient
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_setting, container, false)
         val back = view.findViewById<ImageView>(R.id.ivBack)
-        back.setOnClickListener { _ -> fragmentManager?.beginTransaction()?.replace(R.id.rlMainActivityContainer, ContentFragment.newInstance())?.commit()}
+        back.setOnClickListener { fragmentManager?.beginTransaction()?.replace(R.id.rlMainActivityContainer, ContentFragment.newInstance())?.commit()}
         val changePersonalizedSetting = view.findViewById<Button>(R.id.changePersonalizedSetting)
         consentForm = makeConsentForm(activity!!)
-        changePersonalizedSetting.setOnClickListener { _ -> consentForm?.load()}
+        changePersonalizedSetting.setOnClickListener { consentForm?.load()}
         val licensesButton = view.findViewById<Button>(R.id.licenseButton)
         OssLicensesMenuActivity.setActivityTitle(getString(R.string.custom_license_title))
-        licensesButton.setOnClickListener { _ -> startActivity(Intent(activity, OssLicensesMenuActivity::class.java)) }
-        return view
-    }
+        licensesButton.setOnClickListener { startActivity(Intent(activity, OssLicensesMenuActivity::class.java)) }
+
+        billingClient = BillingClient.newBuilder(requireContext()).build()
+        billingClient.startConnection(object : BillingClientStateListener {
+            override fun onBillingSetupFinished(@BillingClient.BillingResponse billingResponseCode: Int) {
+                if (billingResponseCode == BillingClient.BillingResponse.OK) {
+                    // The BillingClient is ready. You can query purchases here.
+                }
+            }
+            override fun onBillingServiceDisconnected() {
+                // Try to restart the connection on the next request to
+                // Google Play by calling the startConnection() method.
+                Handler().postDelayed(
+                        { billingClient.startConnection(this) }
+                        , connectionRetryIntervalMill
+                )
+            }
+        })
+
+        val donate390Button = view.findViewById<Button>(R.id.donateButton390)
+        donate390Button.setOnClickListener {
+            val skuList = ArrayList<String>()
+            skuList.add("ad-free")
+            val params = SkuDetailsParams.newBuilder()
+            params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP)
+            billingClient.querySkuDetailsAsync(params.build()) { responseCode, skuDetailsList ->
+                // Process the result.
+                if (responseCode == BillingClient.BillingResponse.OK && skuDetailsList != null) {
+                    for (skuDetails in skuDetailsList) {
+                        val sku = skuDetails.sku
+                        val price = skuDetails.price
+                        if ("premium_upgrade" == sku) {
+                            Log.d(price, "billing")
+                        }
+                    }
+                }
+            }
+        }
+
+            return view
+        }
 
     private fun makeConsentForm(context: Context): ConsentForm {
         val adManager = PersonalizedAdManager(MyApplication.getInstance())
@@ -94,7 +142,17 @@ class SettingFragment : Fragment() {
             }
         }).build()
     }
-
+/*
+    private fun executeServiceRequest(runnable: Runnable) {
+        if (mIsServiceConnected) {
+            runnable.run()
+        } else {
+            // If billing service was disconnected, we try to reconnect 1 time.
+            // (feel free to introduce your retry policy here).
+            startServiceConnection(runnable)
+        }
+    }
+*/
 
     companion object {
         /**
@@ -112,5 +170,8 @@ class SettingFragment : Fragment() {
                     ConsentInformation.getInstance(activity).addTestDevice("71FDD2458B24F37418B39566411942D2")
                     ConsentInformation.getInstance(activity).debugGeography = DebugGeography.DEBUG_GEOGRAPHY_EEA
                 }
+
+        const val connectionRetryIntervalMill = 3000L
     }
+
 }
