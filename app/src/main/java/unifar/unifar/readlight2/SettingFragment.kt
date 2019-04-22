@@ -24,6 +24,7 @@ import android.content.ServiceConnection
 import android.os.Handler
 import android.util.Log
 import com.android.billingclient.api.BillingClientStateListener
+import com.android.billingclient.api.PurchasesUpdatedListener
 import com.android.billingclient.api.SkuDetailsParams
 
 
@@ -63,7 +64,7 @@ class SettingFragment : Fragment() {
         OssLicensesMenuActivity.setActivityTitle(getString(R.string.custom_license_title))
         licensesButton.setOnClickListener { startActivity(Intent(activity, OssLicensesMenuActivity::class.java)) }
 
-        billingClient = BillingClient.newBuilder(requireContext()).build()
+        billingClient = BillingClient.newBuilder(requireContext()).setListener { responseCode, purchases ->  }.build()
         billingClient.startConnection(object : BillingClientStateListener {
             override fun onBillingSetupFinished(@BillingClient.BillingResponse billingResponseCode: Int) {
                 if (billingResponseCode == BillingClient.BillingResponse.OK) {
@@ -83,7 +84,7 @@ class SettingFragment : Fragment() {
         val donate390Button = view.findViewById<Button>(R.id.donateButton390)
         donate390Button.setOnClickListener {
             val skuList = ArrayList<String>()
-            skuList.add("ad-free")
+            skuList.add("adfree390")
             val params = SkuDetailsParams.newBuilder()
             params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP)
             billingClient.querySkuDetailsAsync(params.build()) { responseCode, skuDetailsList ->
@@ -92,7 +93,7 @@ class SettingFragment : Fragment() {
                     for (skuDetails in skuDetailsList) {
                         val sku = skuDetails.sku
                         val price = skuDetails.price
-                        if ("premium_upgrade" == sku) {
+                        if (sku == "adfree390") {
                             Log.d(price, "billing")
                         }
                     }
