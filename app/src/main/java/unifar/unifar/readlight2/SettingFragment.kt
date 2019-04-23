@@ -16,16 +16,13 @@ import java.net.MalformedURLException
 import java.net.URL
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import android.content.Intent
-import com.android.billingclient.api.BillingClient
 import com.android.vending.billing.IInAppBillingService
 import android.os.IBinder
 import android.content.ComponentName
 import android.content.ServiceConnection
 import android.os.Handler
 import android.util.Log
-import com.android.billingclient.api.BillingClientStateListener
-import com.android.billingclient.api.PurchasesUpdatedListener
-import com.android.billingclient.api.SkuDetailsParams
+import com.android.billingclient.api.*
 
 
 /**
@@ -37,7 +34,7 @@ import com.android.billingclient.api.SkuDetailsParams
  * create an instance of this fragment.
  *
  */
-class SettingFragment : Fragment() {
+class SettingFragment : Fragment() , PurchasesUpdatedListener{
 
     private val mIsServiceConnected: Boolean = false
     private var consentInformation: ConsentInformation? = null
@@ -64,7 +61,7 @@ class SettingFragment : Fragment() {
         OssLicensesMenuActivity.setActivityTitle(getString(R.string.custom_license_title))
         licensesButton.setOnClickListener { startActivity(Intent(activity, OssLicensesMenuActivity::class.java)) }
 
-        billingClient = BillingClient.newBuilder(requireContext()).setListener { responseCode, purchases ->  }.build()
+        billingClient = BillingClient.newBuilder(requireContext()).setListener(this).build()
         billingClient.startConnection(object : BillingClientStateListener {
             override fun onBillingSetupFinished(@BillingClient.BillingResponse billingResponseCode: Int) {
                 if (billingResponseCode == BillingClient.BillingResponse.OK) {
@@ -93,6 +90,11 @@ class SettingFragment : Fragment() {
                     for (skuDetails in skuDetailsList) {
                         val sku = skuDetails.sku
                         val price = skuDetails.price
+                        val flowParams = BillingFlowParams.newBuilder()
+                                .setSkuDetails(skuDetails)
+                                .build()
+                        billingClient.launchBillingFlow(activity, flowParams)
+
                         if (sku == "adfree390") {
                             Log.d(price, "billing")
                         }
@@ -154,6 +156,17 @@ class SettingFragment : Fragment() {
         }
     }
 */
+    override fun onPurchasesUpdated(@BillingClient.BillingResponse responseCode: Int, purchases: List<Purchase>?) {
+        if (responseCode == BillingClient.BillingResponse.OK && purchases != null) {
+            for (purchase in purchases) {
+
+            }
+        } else if (responseCode == BillingClient.BillingResponse.USER_CANCELED) {
+            // Handle an error caused by a user cancelling the purchase flow.
+        } else {
+            // Handle any other error codes.
+        }
+    }
 
     companion object {
         /**
