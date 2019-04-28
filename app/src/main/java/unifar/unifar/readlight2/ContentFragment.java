@@ -20,6 +20,8 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
+import com.google.android.gms.ads.AdView;
+
 import java.util.Calendar;
 
 import yuku.ambilwarna.colorpicker.AmbilWarnaDialogFragment;
@@ -119,6 +121,10 @@ public class ContentFragment extends Fragment implements TimePickerListener{
         myViews = new MyViews(currentColor, vgContentFragmentContainer, ivColorPalette, handler, fragmentManeger, seekBar,(AppCompatActivity) getActivity(), ivAddAlarmButton, ivSettingsView);
         myViews.applyAll();
 
+        AdView bannerAd = viContent.findViewById(R.id.adView);
+        if (sharedPreferences.getBoolean("isAdfree", false)){
+            bannerAd.setVisibility(View.INVISIBLE);
+        }
         // create new instance of AmbilWarnaDialogFragment and set OnAmbilWarnaListener listener to it
         // show dialog fragment with some tag value
         return viContent;

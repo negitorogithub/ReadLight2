@@ -78,6 +78,7 @@ class MyViews {
                     .build());
         }
 
+
         this.mivAddAlarmButton = ivAddAlarmButton;
         this.mseekBar.setMax(1000);
         this.mseekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

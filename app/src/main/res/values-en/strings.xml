@@ -10,10 +10,10 @@
     <string name="change_personalize_setting_for_europe_users">Change Personalize Setting</string>
     <string name="licences_information">Licences information</string>
     <string name="custom_license_title">Licenses information</string>
-    <string name="donate390" >Buy adfree edition($3.90)</string>
-    <string name="donate1000">Become a supporter and buy adfree edition($10.00)</string>
-    <string name="donate1000dummy" >Become a supporter($10.00)</string>
-    <string name="donate3000" >Become a gold supporter($30.00)</string>
+    <string name="donate390" >Buy an ad-free edition(%1$s)</string>
+    <string name="donate990">Buy an supporter edition and an ad-free edition(%1$s)</string>
+    <string name="donate990dummy">Buy an supporter edition(%1$s)</string>
+    <string name="donate2990">Become a gold supporter and an ad-free edition(%1$s)</string>
     <string name="textviewsupporterexplanation">サポーターになると、下のサポーター一覧に名前が載ります</string>
 
 </resources>
