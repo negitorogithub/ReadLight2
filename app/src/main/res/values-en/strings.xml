@@ -15,5 +15,7 @@
     <string name="donate990dummy">Buy an supporter edition(%1$s)</string>
     <string name="donate2990">Become a gold supporter and an ad-free edition(%1$s)</string>
     <string name="textviewsupporterexplanation">サポーターになると、下のサポーター一覧に名前が載ります</string>
+    <string name="send_name">Send your name to server</string>
+    <string name="name_here">Your name here</string>
 
 </resources>

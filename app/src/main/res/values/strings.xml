@@ -11,9 +11,11 @@
     <string name="change_personalize_setting_for_europe_users">パーソナライズ設定変更</string>
     <string name="licences_information">ライセンス情報</string>
     <string name="custom_license_title">ライセンス情報</string>
-    <string name="donate390" >広告を消す(%1$s)</string>
+    <string name="donate390">広告を消す(%1$s)</string>
     <string name="donate990">サポーターになる+広告を消す(%1$s)</string>
-    <string name="donate990dummy" >サポーターになる(%1$s)</string>
-    <string name="donate2990" >ゴールドサポーターになる+広告を消す(%1$s)</string>
+    <string name="donate990dummy">サポーターになる(%1$s)</string>
+    <string name="donate2990">ゴールドサポーターになる+広告を消す(%1$s)</string>
     <string name="textviewsupporterexplanation">サポーターになると、下のサポーター一覧に名前が載ります</string>
+    <string name="send_name">名前を送信する</string>
+    <string name="name_here">名前を入力してください</string>
 </resources>

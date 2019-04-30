@@ -15,6 +15,7 @@ import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import android.content.Intent
 import android.content.Context.MODE_PRIVATE
 import android.os.Handler
+import android.util.Log
 import com.android.billingclient.api.*
 import kotlinx.coroutines.*
 import kotlin.coroutines.suspendCoroutine
@@ -114,7 +115,10 @@ class SettingFragment : Fragment(), PurchasesUpdatedListener {
             params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP)
             billingClient.querySkuDetailsAsync(params.build()) { responseCode, skuDetailsList ->
                 // Process the result.
+
                 if (responseCode == BillingClient.BillingResponse.OK && skuDetailsList != null) {
+                    Log.d("billing", responseCode.toString())
+                    Log.d("billing", skuDetailsList.toString())
                     skuDetailsList.forEach { skuDetails: SkuDetails ->
                         when (skuDetails.sku) {
                             AD_FREE_390 -> {
