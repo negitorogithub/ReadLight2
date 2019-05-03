@@ -90,6 +90,7 @@ public class ContentFragment extends Fragment implements TimePickerListener{
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         final ContentFragment thisContext = this;
         this.mcontainer = container;

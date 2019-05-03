@@ -1,24 +1,30 @@
 package unifar.unifar.readlight2
 
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.ListView
+import com.android.billingclient.api.*
 import com.google.ads.consent.*
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.net.MalformedURLException
 import java.net.URL
-import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
-import android.content.Intent
-import android.content.Context.MODE_PRIVATE
-import android.os.Handler
-import android.util.Log
-import com.android.billingclient.api.*
-import kotlinx.coroutines.*
-import kotlin.coroutines.suspendCoroutine
 
 
 /**
@@ -30,7 +36,10 @@ import kotlin.coroutines.suspendCoroutine
  * create an instance of this fragment.
  *
  */
-class SettingFragment : Fragment(), PurchasesUpdatedListener {
+class SettingFragment : Fragment(), PurchasesUpdatedListener, SendNameFragment.OnFragmentInteractionListener {
+    override fun onFragmentInteraction(uri: Uri) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     private val mIsServiceConnected: Boolean = false
     private var consentInformation: ConsentInformation? = null
@@ -73,9 +82,10 @@ class SettingFragment : Fragment(), PurchasesUpdatedListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
+
         val view = inflater.inflate(R.layout.fragment_setting, container, false)
         val back = view.findViewById<ImageView>(R.id.ivBack)
-        back.setOnClickListener { fragmentManager?.beginTransaction()?.replace(R.id.rlMainActivityContainer, ContentFragment.newInstance())?.commit() }
+        back.setOnClickListener { fragmentManager?.beginTransaction()?.replace(R.id.mainActivityContainer, ContentFragment.newInstance())?.commit() }
         val changePersonalizedSetting = view.findViewById<Button>(R.id.changePersonalizedSetting)
         consentForm = makeConsentForm(activity!!)
         changePersonalizedSetting.setOnClickListener { consentForm?.load() }
@@ -83,11 +93,55 @@ class SettingFragment : Fragment(), PurchasesUpdatedListener {
         OssLicensesMenuActivity.setActivityTitle(getString(R.string.custom_license_title))
         licensesButton.setOnClickListener { startActivity(Intent(activity, OssLicensesMenuActivity::class.java)) }
 
+
+        val donate390Button = view.findViewById<Button>(R.id.donateButton390)
+        val donate990Button = view.findViewById<Button>(R.id.donateButton990)
+        val donate990ButtonDummy = view.findViewById<Button>(R.id.donateButton990dummy)
+        val donate2990Button = view.findViewById<Button>(R.id.donateButton2990)
         billingClient = BillingClient.newBuilder(requireContext()).setListener(this).build()
         billingClient.startConnection(object : BillingClientStateListener {
             override fun onBillingSetupFinished(@BillingClient.BillingResponse billingResponseCode: Int) {
                 if (billingResponseCode == BillingClient.BillingResponse.OK) {
                     // The BillingClient is ready. You can query purchases here.
+                    val skuList = listOf(AD_FREE_390, SUPPORTER_EDITION_990, SUPPORTER_EDITION_DUMMY_990, GOLD_SUPPORTER_EDITION_2990)
+                    val params = SkuDetailsParams.newBuilder()
+                    params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP)
+                    billingClient.querySkuDetailsAsync(params.build()) { responseCode, skuDetailsList ->
+                        // Process the result.
+
+                        if (responseCode == BillingClient.BillingResponse.OK && skuDetailsList != null) {
+                            Log.d("billing", responseCode.toString())
+                            Log.d("billing", skuDetailsList.toString())
+                            skuDetailsList.forEach { skuDetails: SkuDetails ->
+                                when (skuDetails.sku) {
+                                    AD_FREE_390 -> {
+                                        donate390Button.text = resources.getString(R.string.donate390, skuDetails.price)
+                                        donate390Button.setOnClickListener {
+                                            launchPurchaseFlow(skuDetails)
+                                        }
+                                    }
+                                    SUPPORTER_EDITION_990 -> {
+                                        donate990Button.text = resources.getString(R.string.donate990, skuDetails.price)
+                                        donate990Button.setOnClickListener {
+                                            launchPurchaseFlow(skuDetails)
+                                        }
+                                    }
+                                    SUPPORTER_EDITION_DUMMY_990 -> {
+                                        donate990ButtonDummy.text = resources.getString(R.string.donate990dummy, skuDetails.price)
+                                        donate990ButtonDummy.setOnClickListener {
+                                            launchPurchaseFlow(skuDetails)
+                                        }
+                                    }
+                                    GOLD_SUPPORTER_EDITION_2990 -> {
+                                        donate2990Button.text = resources.getString(R.string.donate2990, skuDetails.price)
+                                        donate2990Button.setOnClickListener {
+                                            launchPurchaseFlow(skuDetails)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
@@ -104,51 +158,30 @@ class SettingFragment : Fragment(), PurchasesUpdatedListener {
             awaitTest()
         }
 
-        val donate390Button = view.findViewById<Button>(R.id.donateButton390)
-        val donate990Button = view.findViewById<Button>(R.id.donateButton990)
-        val donate990ButtonDummy = view.findViewById<Button>(R.id.donateButton990dummy)
-        val donate2990Button = view.findViewById<Button>(R.id.donateButton2990)
+        val nameListView = view.findViewById<ListView>(R.id.supporterNameListView)
+
 
         GlobalScope.launch {
-            val skuList = listOf(AD_FREE_390, SUPPORTER_EDITION_990, SUPPORTER_EDITION_DUMMY_990, GOLD_SUPPORTER_EDITION_2990)
-            val params = SkuDetailsParams.newBuilder()
-            params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP)
-            billingClient.querySkuDetailsAsync(params.build()) { responseCode, skuDetailsList ->
-                // Process the result.
-
-                if (responseCode == BillingClient.BillingResponse.OK && skuDetailsList != null) {
-                    Log.d("billing", responseCode.toString())
-                    Log.d("billing", skuDetailsList.toString())
-                    skuDetailsList.forEach { skuDetails: SkuDetails ->
-                        when (skuDetails.sku) {
-                            AD_FREE_390 -> {
-                                donate390Button.text = resources.getString(R.string.donate390, skuDetails.price)
-                                donate390Button.setOnClickListener {
-                                    launchPurchaseFlow(skuDetails)
-                                }
+            val db = FirebaseFirestore.getInstance()
+            db.collection("normalSupporters")
+                    .get()
+                    .addOnCompleteListener {task ->
+                        if (task.isSuccessful) {
+                            task.result?.let {
+                                val normalSupporterNames = it.documents.map {documentSnapshot -> documentSnapshot.data?.get("name")}.toMutableList()
+                                nameListView.adapter =
+                                        ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1)
+                                                .apply {
+                                                    for (normalSupporterName in normalSupporterNames){
+                                                    add(normalSupporterName as String?)
+                                                    }
+                                                }
                             }
-                            SUPPORTER_EDITION_990 -> {
-                                donate990Button.text = resources.getString(R.string.donate990, skuDetails.price)
-                                donate990Button.setOnClickListener {
-                                    launchPurchaseFlow(skuDetails)
-                                }
-                            }
-                            SUPPORTER_EDITION_DUMMY_990 -> {
-                                donate990ButtonDummy.text = resources.getString(R.string.donate990dummy, skuDetails.price)
-                                donate990ButtonDummy.setOnClickListener {
-                                    launchPurchaseFlow(skuDetails)
-                                }
-                            }
-                            GOLD_SUPPORTER_EDITION_2990 -> {
-                                donate2990Button.text = resources.getString(R.string.donate2990, skuDetails.price)
-                                donate2990Button.setOnClickListener {
-                                    launchPurchaseFlow(skuDetails)
-                                }
-                            }
-                        }
+                        } else {
+                            Log.d("", "Error getting documents: ", task.exception);                        }
                     }
-                }
-            }
+
+
         }
         return view
     }
@@ -242,8 +275,21 @@ class SettingFragment : Fragment(), PurchasesUpdatedListener {
     override fun onPurchasesUpdated(@BillingClient.BillingResponse responseCode: Int, purchases: List<Purchase>?) {
         if (responseCode == BillingClient.BillingResponse.OK && purchases != null) {
             for (purchase in purchases) {
-                if (purchase.sku == AD_FREE_390) {
-                    activity?.getSharedPreferences("Settings", MODE_PRIVATE)?.edit()?.putBoolean("isAdfree", true)?.apply()
+                when (purchase.sku) {
+                    AD_FREE_390 ->{activity?.getSharedPreferences("Settings", MODE_PRIVATE)?.edit()?.putBoolean("isAdfree", true)?.apply()}
+                    SUPPORTER_EDITION_990 ->{
+                        activity?.getSharedPreferences("Settings", MODE_PRIVATE)?.edit()?.putBoolean("isAdfree", true)?.apply()
+                        fragmentManager?.beginTransaction()?.replace(R.id.mainActivityContainer, SendNameFragment.newInstance(false))?.commit()
+                    }
+                    SUPPORTER_EDITION_DUMMY_990 ->{
+                        fragmentManager?.beginTransaction()?.replace(R.id.mainActivityContainer, SendNameFragment.newInstance(false))?.commit()
+                    }
+                    GOLD_SUPPORTER_EDITION_2990 ->{
+                        activity?.getSharedPreferences("Settings", MODE_PRIVATE)?.edit()?.putBoolean("isAdfree", true)?.apply()
+                        fragmentManager?.beginTransaction()?.replace(R.id.mainActivityContainer, SendNameFragment.newInstance(true))?.commit()
+                    }
+
+
                 }
             }
         } else if (responseCode == BillingClient.BillingResponse.USER_CANCELED) {

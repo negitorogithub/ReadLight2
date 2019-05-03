@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.app.TimePickerDialog;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +19,9 @@ import android.widget.TimePicker;
 
 import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 
 import java.util.Calendar;
-import java.util.Set;
 
 import yuku.ambilwarna.colorpicker.AmbilWarnaDialogFragment;
 import yuku.ambilwarna.colorpicker.OnAmbilWarnaListener;
@@ -359,7 +356,7 @@ class MyViews {
         this.mivSettingsView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mfragmentManeger.beginTransaction().replace(R.id.rlMainActivityContainer, SettingFragment.newInstance()).commit();
+                mfragmentManeger.beginTransaction().replace(R.id.mainActivityContainer, SettingFragment.newInstance()).commit();
             }
         });
     }

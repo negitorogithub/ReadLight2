@@ -1,6 +1,7 @@
 package unifar.unifar.readlight2;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -13,13 +14,15 @@ import com.google.android.gms.ads.InterstitialAd;
 
 import com.google.ads.consent.*;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import hotchemi.android.rate.AppRate;
 import hotchemi.android.rate.OnClickButtonListener;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements SendNameFragment.OnFragmentInteractionListener {
 
     public static InterstitialAd InterstitialAd;
     private ConsentForm consentForm;
@@ -65,7 +68,7 @@ public class MainActivity extends AppCompatActivity{
 
         if (getSupportFragmentManager().findFragmentByTag("contentFragment") == null) {
             Fragment contentFragment = ContentFragment.newInstance();
-            getSupportFragmentManager().beginTransaction().add(R.id.rlMainActivityContainer,contentFragment,"contentFragment").commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.mainActivityContainer,contentFragment,"contentFragment").commit();
         }
         Bundle extras = new Bundle();
         extras.putString("npa", "1");
@@ -154,4 +157,8 @@ public class MainActivity extends AppCompatActivity{
     }
 
 
+    @Override
+    public void onFragmentInteraction(@NotNull Uri uri) {
+
+    }
 }
