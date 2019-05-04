@@ -93,7 +93,6 @@ public class MainActivity extends AppCompatActivity implements SendNameFragment.
 
         });
 
-
         AppRate.with(this)
                 .setInstallDays(5) // default 10, 0 means install day.
                 .setLaunchTimes(3) // default 10
@@ -109,6 +108,9 @@ public class MainActivity extends AppCompatActivity implements SendNameFragment.
                 .monitor();
         // Show a dialog if meets conditions
         AppRate.showRateDialogIfMeetsConditions(this);
+
+
+
     }
 
     private ConsentForm makeConsentForm(Context context){

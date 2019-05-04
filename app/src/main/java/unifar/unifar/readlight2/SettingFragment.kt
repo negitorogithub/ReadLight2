@@ -21,7 +21,6 @@ import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.net.MalformedURLException
 import java.net.URL
@@ -41,7 +40,6 @@ class SettingFragment : Fragment(), PurchasesUpdatedListener, SendNameFragment.O
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    private val mIsServiceConnected: Boolean = false
     private var consentInformation: ConsentInformation? = null
     private var consentForm: ConsentForm? = null
 
@@ -154,81 +152,48 @@ class SettingFragment : Fragment(), PurchasesUpdatedListener, SendNameFragment.O
                 )
             }
         })
+
+        val normalNameListView = view.findViewById<ListView>(R.id.supporterNameListView)
+        val goldNameListView = view.findViewById<ListView>(R.id.goldSupporterNameListView)
+        val db = FirebaseFirestore.getInstance()
         GlobalScope.launch {
-            awaitTest()
-        }
-
-        val nameListView = view.findViewById<ListView>(R.id.supporterNameListView)
-
-
-        GlobalScope.launch {
-            val db = FirebaseFirestore.getInstance()
+            val arrayAdapter = ArrayAdapter<String>(requireContext(), R.layout.normal_text_view)
             db.collection("normalSupporters")
                     .get()
-                    .addOnCompleteListener {task ->
+                    .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             task.result?.let {
-                                val normalSupporterNames = it.documents.map {documentSnapshot -> documentSnapshot.data?.get("name")}.toMutableList()
-                                nameListView.adapter =
-                                        ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1)
-                                                .apply {
-                                                    for (normalSupporterName in normalSupporterNames){
-                                                    add(normalSupporterName as String?)
-                                                    }
-                                                }
+                                val normalSupporterNames = it.documents.map { documentSnapshot -> documentSnapshot.data?.get("name") }.toMutableList()
+                                for (normalSupporterName in normalSupporterNames) {
+                                    arrayAdapter.add(normalSupporterName as String?)
+                                }
+                                normalNameListView.adapter = arrayAdapter
                             }
                         } else {
-                            Log.d("", "Error getting documents: ", task.exception);                        }
+                            Log.d("", "Error getting documents: ", task.exception); }
                     }
-
-
         }
+
+        GlobalScope.launch {
+            val arrayAdapter = ArrayAdapter<String>(requireContext(), R.layout.golden_text_view)
+            db.collection("goldSupporters")
+                    .get()
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            task.result?.let {
+                                val goldSupporterNames = it.documents.map { documentSnapshot -> documentSnapshot.data?.get("name") }.toMutableList()
+                                for (goldSupporterName in goldSupporterNames) {
+                                    arrayAdapter.add(goldSupporterName as String?)
+                                }
+                                goldNameListView.adapter = arrayAdapter
+                            }
+                        } else {
+                            Log.d("", "Error getting documents: ", task.exception); }
+                    }
+        }
+
+
         return view
-    }
-
-    private fun queryItem(itemName: String) {
-        val skuList = ArrayList<String>()
-        skuList.add(itemName)
-        val params = SkuDetailsParams.newBuilder()
-        params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP)
-        billingClient.querySkuDetailsAsync(params.build()) { responseCode, skuDetailsList ->
-            // Process the result.
-            if (responseCode == BillingClient.BillingResponse.OK && skuDetailsList != null) {
-                for (skuDetails in skuDetailsList) {
-                    val flowParams = BillingFlowParams.newBuilder()
-                            .setSkuDetails(skuDetails)
-                            .build()
-                    billingClient.launchBillingFlow(activity, flowParams)
-                }
-            }
-        }
-    }
-
-    private suspend fun awaitTest() {
-        val deferred = GlobalScope.async {
-            delay(4000)
-            return@async 10
-        }
-        val result = deferred.await()
-        println("result = $result") // "result = 10" が出力される
-    }
-
-    private suspend fun queryItemDetails(itemNameList: List<String>): List<SkuDetails> {
-        val params = SkuDetailsParams.newBuilder()
-        var skuList2return = ArrayList<SkuDetails>()
-        params.setSkusList(itemNameList).setType(BillingClient.SkuType.INAPP)
-
-        return GlobalScope.async {
-
-            billingClient.querySkuDetailsAsync(params.build()) { responseCode, skuDetailsList ->
-                // Process the result.
-                if (responseCode == BillingClient.BillingResponse.OK && skuDetailsList != null) {
-                    skuList2return = skuDetailsList as ArrayList<SkuDetails>
-                }
-            }
-
-            return@async skuList2return
-        }.await()
     }
 
 
@@ -276,20 +241,20 @@ class SettingFragment : Fragment(), PurchasesUpdatedListener, SendNameFragment.O
         if (responseCode == BillingClient.BillingResponse.OK && purchases != null) {
             for (purchase in purchases) {
                 when (purchase.sku) {
-                    AD_FREE_390 ->{activity?.getSharedPreferences("Settings", MODE_PRIVATE)?.edit()?.putBoolean("isAdfree", true)?.apply()}
-                    SUPPORTER_EDITION_990 ->{
+                    AD_FREE_390 -> {
+                        activity?.getSharedPreferences("Settings", MODE_PRIVATE)?.edit()?.putBoolean("isAdfree", true)?.apply()
+                    }
+                    SUPPORTER_EDITION_990 -> {
                         activity?.getSharedPreferences("Settings", MODE_PRIVATE)?.edit()?.putBoolean("isAdfree", true)?.apply()
                         fragmentManager?.beginTransaction()?.replace(R.id.mainActivityContainer, SendNameFragment.newInstance(false))?.commit()
                     }
-                    SUPPORTER_EDITION_DUMMY_990 ->{
+                    SUPPORTER_EDITION_DUMMY_990 -> {
                         fragmentManager?.beginTransaction()?.replace(R.id.mainActivityContainer, SendNameFragment.newInstance(false))?.commit()
                     }
-                    GOLD_SUPPORTER_EDITION_2990 ->{
+                    GOLD_SUPPORTER_EDITION_2990 -> {
                         activity?.getSharedPreferences("Settings", MODE_PRIVATE)?.edit()?.putBoolean("isAdfree", true)?.apply()
                         fragmentManager?.beginTransaction()?.replace(R.id.mainActivityContainer, SendNameFragment.newInstance(true))?.commit()
                     }
-
-
                 }
             }
         } else if (responseCode == BillingClient.BillingResponse.USER_CANCELED) {

@@ -18,4 +18,6 @@
     <string name="textviewsupporterexplanation">サポーターになると、下のサポーター一覧に名前が載ります</string>
     <string name="send_name">名前を送信する</string>
     <string name="name_here">名前を入力してください</string>
+    <string name="success">送信に成功しました!</string>
+    <string name="warning">注意:後から名前を変えることは出来ません</string>
 </resources>

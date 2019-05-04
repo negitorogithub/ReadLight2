@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -25,7 +26,6 @@ private const val ARG_PARAM1 = "param1"
  *
  */
 class SendNameFragment : Fragment() {
-    // TODO: Rename and change types of parameters
     private var isGold: Boolean = false
     private var listener: OnFragmentInteractionListener? = null
 
@@ -44,22 +44,36 @@ class SendNameFragment : Fragment() {
         val editText = view.findViewById<EditText>(R.id.nameEditText)
         val submitButton = view.findViewById<Button>(R.id.submitButton)
         if (isGold) {
-            submitButton.setOnClickListener {
+            submitButton.setOnClickListener { button ->
+                button.isEnabled = false
                 db.collection("goldSupporters")
                         .add(HashMap<String, Any>()
                                 .apply {
-                                    put("message", editText.text.toString())
+                                    put("name", editText.text.toString())
                                     put("time", FieldValue.serverTimestamp())
                                 })
+                        .addOnSuccessListener {
+                            Toast.makeText(activity, R.string.success, Toast.LENGTH_SHORT).show()
+                            fragmentManager?.beginTransaction()?.replace(R.id.mainActivityContainer, SettingFragment.newInstance())?.commit()
+                        }.addOnFailureListener {
+                            button.isEnabled = true
+                        }
             }
-        }else{
-            submitButton.setOnClickListener {
+        } else {
+            submitButton.setOnClickListener { button ->
+                button.isEnabled = false
                 db.collection("normalSupporters")
                         .add(HashMap<String, Any>()
                                 .apply {
-                                    put("message", editText.text.toString())
+                                    put("name", editText.text.toString())
                                     put("time", FieldValue.serverTimestamp())
                                 })
+                        .addOnSuccessListener {
+                            Toast.makeText(activity, R.string.success, Toast.LENGTH_SHORT).show()
+                            fragmentManager?.beginTransaction()?.replace(R.id.mainActivityContainer, SettingFragment.newInstance())?.commit()
+                        }.addOnFailureListener {
+                            button.isEnabled = true
+                        }
             }
         }
         return view
