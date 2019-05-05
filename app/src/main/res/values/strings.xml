@@ -20,4 +20,7 @@
     <string name="name_here">名前を入力してください</string>
     <string name="success">送信に成功しました!</string>
     <string name="warning">注意:後から名前を変えることは出来ません</string>
+    <string name="restore">購入を復元する</string>
+    <string name="privacyPolicy">プライバシーポリシー</string>
+    <string name="privacyPolicyContent">当社で配信するアプリでは、広告配信を目的として以下の広告配信事業者がご利用者の情報を自動取得する場合がございます。取得する情報、利用目的、第三者への提供等につきましては、以下の広告配信事業者のアプリケーション・プライバシーポリシーのリンクよりご確認ください。  AdMob（Google Inc.） http://www.google.com/intl/ja/policies/technologies/ads/</string>
 </resources>

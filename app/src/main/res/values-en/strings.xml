@@ -19,5 +19,8 @@
     <string name="name_here">Your name here</string>
     <string name="success">Success!</string>
     <string name="warning">Warning:You can\'t change what you sent</string>
+    <string name="restore">Restore purchases</string>
+    <string name="privacyPolicy">Privacy policy</string>
+    <string name="privacyPolicyContent">For apps distributed by Our Company, the following ad distributors may obtain your information automatically for the purpose of advertisement distribution. Please refer to the link of the following advertisement distributor\'s application privacy policy for information to be obtained, purpose of use, provision to third parties, etc. AdMob (Google Inc.) http://www.google.com/intl/ja/policies/technologies/ads/</string>
 
 </resources>

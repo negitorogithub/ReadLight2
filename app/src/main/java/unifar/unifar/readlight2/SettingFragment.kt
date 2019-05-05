@@ -156,6 +156,7 @@ class SettingFragment : Fragment(), PurchasesUpdatedListener, SendNameFragment.O
         val normalNameListView = view.findViewById<ListView>(R.id.supporterNameListView)
         val goldNameListView = view.findViewById<ListView>(R.id.goldSupporterNameListView)
         val db = FirebaseFirestore.getInstance()
+        //ノーマルサポーターの表示
         GlobalScope.launch {
             val arrayAdapter = ArrayAdapter<String>(requireContext(), R.layout.normal_text_view)
             db.collection("normalSupporters")
@@ -173,7 +174,7 @@ class SettingFragment : Fragment(), PurchasesUpdatedListener, SendNameFragment.O
                             Log.d("", "Error getting documents: ", task.exception); }
                     }
         }
-
+        //ゴールドサポーターの表示
         GlobalScope.launch {
             val arrayAdapter = ArrayAdapter<String>(requireContext(), R.layout.golden_text_view)
             db.collection("goldSupporters")
@@ -192,7 +193,10 @@ class SettingFragment : Fragment(), PurchasesUpdatedListener, SendNameFragment.O
                     }
         }
 
-
+        val privacyPolicyButton = view.findViewById<Button>(R.id.privacyPolicyButton)
+        privacyPolicyButton.setOnClickListener {
+            fragmentManager?.beginTransaction()?.replace(R.id.mainActivityContainer, PrivacyPolicyFragment.newInstance()).commit()
+        }
         return view
     }
 
