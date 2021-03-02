@@ -2,10 +2,10 @@ package unifar.unifar.readlight2;
 
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.app.TimePickerDialog;
 import android.os.Handler;
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.FragmentManager;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;

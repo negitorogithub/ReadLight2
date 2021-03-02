@@ -6,7 +6,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
-import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -15,12 +14,12 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.ListView
+import androidx.fragment.app.Fragment
 import com.android.billingclient.api.*
 import com.google.ads.consent.*
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.net.MalformedURLException
 import java.net.URL
@@ -35,7 +34,7 @@ import java.net.URL
  * create an instance of this fragment.
  *
  */
-class SettingFragment : Fragment(), PurchasesUpdatedListener, SendNameFragment.OnFragmentInteractionListener {
+class SettingFragment : androidx.fragment.app.Fragment(), PurchasesUpdatedListener, SendNameFragment.OnFragmentInteractionListener {
     override fun onFragmentInteraction(uri: Uri) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -96,19 +95,19 @@ class SettingFragment : Fragment(), PurchasesUpdatedListener, SendNameFragment.O
         val donate990Button = view.findViewById<Button>(R.id.donateButton990)
         val donate990ButtonDummy = view.findViewById<Button>(R.id.donateButton990dummy)
         val donate2990Button = view.findViewById<Button>(R.id.donateButton2990)
-        billingClient = BillingClient.newBuilder(requireContext()).setListener(this).build()
+        billingClient = BillingClient.newBuilder(requireContext()).enablePendingPurchases().setListener(this).build()
         billingClient.startConnection(object : BillingClientStateListener {
-            override fun onBillingSetupFinished(@BillingClient.BillingResponse billingResponseCode: Int) {
-                if (billingResponseCode == BillingClient.BillingResponse.OK) {
+            override fun onBillingSetupFinished(p0: BillingResult) {
+                if (p0.responseCode == BillingClient.BillingResponseCode.OK) {
                     // The BillingClient is ready. You can query purchases here.
                     val skuList = listOf(AD_FREE_390, SUPPORTER_EDITION_990, SUPPORTER_EDITION_DUMMY_990, GOLD_SUPPORTER_EDITION_2990)
                     val params = SkuDetailsParams.newBuilder()
                     params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP)
-                    billingClient.querySkuDetailsAsync(params.build()) { responseCode, skuDetailsList ->
+                    billingClient.querySkuDetailsAsync(params.build()) { billingResult, skuDetailsList ->
                         // Process the result.
 
-                        if (responseCode == BillingClient.BillingResponse.OK && skuDetailsList != null) {
-                            Log.d("billing", responseCode.toString())
+                        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && skuDetailsList != null) {
+                            Log.d("billing", billingResult.toString())
                             Log.d("billing", skuDetailsList.toString())
                             skuDetailsList.forEach { skuDetails: SkuDetails ->
                                 when (skuDetails.sku) {
@@ -147,8 +146,7 @@ class SettingFragment : Fragment(), PurchasesUpdatedListener, SendNameFragment.O
                 // Try to restart the connection on the next request to
                 // Google Play by calling the startConnection() method.
                 Handler().postDelayed(
-                        { billingClient.startConnection(this) }
-                        , connectionRetryIntervalMill
+                        { billingClient.startConnection(this) }, connectionRetryIntervalMill
                 )
             }
         })
@@ -195,7 +193,7 @@ class SettingFragment : Fragment(), PurchasesUpdatedListener, SendNameFragment.O
 
         val privacyPolicyButton = view.findViewById<Button>(R.id.privacyPolicyButton)
         privacyPolicyButton.setOnClickListener {
-            fragmentManager?.beginTransaction()?.replace(R.id.mainActivityContainer, PrivacyPolicyFragment.newInstance()).commit()
+            fragmentManager?.beginTransaction()?.replace(R.id.mainActivityContainer, PrivacyPolicyFragment.newInstance())?.commit()
         }
         return view
     }
@@ -241,8 +239,17 @@ class SettingFragment : Fragment(), PurchasesUpdatedListener, SendNameFragment.O
         }).build()
     }
 
-    override fun onPurchasesUpdated(@BillingClient.BillingResponse responseCode: Int, purchases: List<Purchase>?) {
-        if (responseCode == BillingClient.BillingResponse.OK && purchases != null) {
+
+    private fun launchPurchaseFlow(skuDetails: SkuDetails) {
+        val flowParams = BillingFlowParams.newBuilder()
+                .setSkuDetails(skuDetails)
+                .build()
+        activity?.let { billingClient.launchBillingFlow(it, flowParams) }
+    }
+
+    override fun onPurchasesUpdated(p0: BillingResult, purchases: MutableList<Purchase>?) {
+        val responseCode = p0.responseCode
+        if (responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
             for (purchase in purchases) {
                 when (purchase.sku) {
                     AD_FREE_390 -> {
@@ -261,18 +268,11 @@ class SettingFragment : Fragment(), PurchasesUpdatedListener, SendNameFragment.O
                     }
                 }
             }
-        } else if (responseCode == BillingClient.BillingResponse.USER_CANCELED) {
+        } else if (responseCode == BillingClient.BillingResponseCode.USER_CANCELED) {
             // Handle an error caused by a user cancelling the purchase flow.
         } else {
             // Handle any other error codes.
         }
-    }
-
-    private fun launchPurchaseFlow(skuDetails: SkuDetails) {
-        val flowParams = BillingFlowParams.newBuilder()
-                .setSkuDetails(skuDetails)
-                .build()
-        billingClient.launchBillingFlow(activity, flowParams)
     }
 
 

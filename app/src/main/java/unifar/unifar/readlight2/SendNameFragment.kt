@@ -3,7 +3,7 @@ package unifar.unifar.readlight2
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +25,7 @@ private const val ARG_PARAM1 = "param1"
  * create an instance of this fragment.
  *
  */
-class SendNameFragment : Fragment() {
+class SendNameFragment : androidx.fragment.app.Fragment() {
     private var isGold: Boolean = false
     private var listener: OnFragmentInteractionListener? = null
 

@@ -3,8 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ReadLight2.iml" filepath="$PROJECT_DIR$/ReadLight2.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/colorPicker/colorPicker.iml" filepath="$PROJECT_DIR$/colorPicker/colorPicker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ReadLight2.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ReadLight2.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/colorPicker/ReadLight2.colorPicker.iml" filepath="$PROJECT_DIR$/.idea/modules/colorPicker/ReadLight2.colorPicker.iml" />
     </modules>
   </component>
 </project>
