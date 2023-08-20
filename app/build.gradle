@@ -1,13 +1,15 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'com.google.gms.oss.licenses.plugin'
+apply plugin: 'com.google.android.gms.oss-licenses-plugin'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 33
     defaultConfig {
         applicationId "unifar.unifar.readlight2"
         minSdkVersion 16
-        targetSdkVersion 30
+        targetSdkVersion 33
         versionCode 15
         versionName "1.3.6"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -19,6 +21,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    buildFeatures {
+        viewBinding = true
+    }
+    namespace 'unifar.unifar.readlight2'
 }
 
 dependencies {
@@ -44,6 +50,9 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1"
     implementation 'com.google.firebase:firebase-ads:19.7.0'
     implementation 'com.google.firebase:firebase-firestore:22.1.1'
+        implementation('androidx.work:work-runtime:2.8.1') {
+            because 'previous versions have a bug impacting this application'
+        }
 }
 
 apply plugin: 'com.google.gms.google-services'
@@ -51,5 +60,9 @@ repositories {
     mavenCentral()
 }
 
-
-apply plugin: 'kotlin-android-extensions'
+tasks.withType(KotlinCompile).configureEach {
+    kotlinOptions {
+        // targetCompatibilityと揃える
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+}
