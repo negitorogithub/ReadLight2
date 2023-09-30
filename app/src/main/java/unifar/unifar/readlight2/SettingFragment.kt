@@ -251,7 +251,7 @@ class SettingFragment : androidx.fragment.app.Fragment(), PurchasesUpdatedListen
         val responseCode = p0.responseCode
         if (responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
             for (purchase in purchases) {
-                when (purchase.sku) {
+                when (purchase.products.first()) {
                     AD_FREE_390 -> {
                         activity?.getSharedPreferences("Settings", MODE_PRIVATE)?.edit()?.putBoolean("isAdfree", true)?.apply()
                     }
